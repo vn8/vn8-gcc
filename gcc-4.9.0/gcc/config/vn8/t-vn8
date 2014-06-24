@@ -1,0 +1,83 @@
+# Copyright (C) 2000-2014 Free Software Foundation, Inc.
+#
+# This file is part of GCC.
+#
+# GCC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# GCC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GCC; see the file COPYING3.  If not see
+# <http://www.gnu.org/licenses/>.
+
+driver-vn8.o: $(srcdir)/config/vn8/driver-vn8.c \
+  $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H)
+	$(COMPILER) -c $(ALL_COMPILERFLAGS) $(ALL_CPPFLAGS) $(INCLUDES) $<
+
+vn8-devices.o: $(srcdir)/config/vn8/vn8-devices.c \
+  $(srcdir)/config/vn8/vn8-mcus.def \
+  $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H)
+	$(COMPILER) -c $(ALL_COMPILERFLAGS) $(ALL_CPPFLAGS) $(INCLUDES) $<
+
+vn8-c.o: $(srcdir)/config/vn8/vn8-c.c \
+  $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) $(TREE_H) $(C_COMMON_H)
+	$(COMPILER) -c $(ALL_COMPILERFLAGS) $(ALL_CPPFLAGS) $(INCLUDES) $<
+
+vn8-log.o: $(srcdir)/config/vn8/vn8-log.c \
+  $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) $(TREE_H) $(INPUT_H) dumpfile.h
+	$(COMPILER) -c $(ALL_COMPILERFLAGS) $(ALL_CPPFLAGS) $(INCLUDES) $<
+
+vn8.o vn8-c.o: $(srcdir)/config/vn8/builtins.def
+
+# This overrides stdfix.h from USER_H which we supply and include
+# in our own stdint.h as stdint-gcc.h.
+
+EXTRA_HEADERS = $(srcdir)/config/vn8/stdfix.h \
+	      	stdfix-gcc.h
+
+stdfix-gcc.h: $(srcdir)/ginclude/stdfix.h
+	-cp $< $@
+
+# Files and Variables auto-generated from vn8-mcus.def
+
+VN8_MCUS = $(srcdir)/config/vn8/vn8-mcus.def
+
+# Run `vn8-mcus' after you changed or added devices in  vn8-mcus.def
+
+.PHONY: vn8-mcus
+
+vn8-mcus: $(srcdir)/config/vn8/t-multilib \
+	  $(srcdir)/config/vn8/vn8-tables.opt \
+	  $(srcdir)/doc/vn8-mmcu.texi ; @true
+
+# Make sure that -mmcu= is supported for devices from vn8-mcus.def and
+# all -mmcu= values are displayed on the help screen
+$(srcdir)/config/vn8/vn8-tables.opt: $(srcdir)/config/vn8/genopt.sh $(VN8_MCUS)
+	$(SHELL) $< $(VN8_MCUS) > $@
+
+# Make sure that -mmcu= support is in sync with -mmcu= documentation.
+gen-vn8-mmcu-texi$(build_exeext): $(srcdir)/config/vn8/gen-vn8-mmcu-texi.c \
+  $(VN8_MCUS) $(srcdir)/config/vn8/vn8-devices.c \
+  $(srcdir)/config/vn8/vn8-arch.h
+	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $< -o $@
+
+$(srcdir)/doc/vn8-mmcu.texi: gen-vn8-mmcu-texi$(build_exeext)
+	$(RUN_GEN) ./$< > $@
+
+# Map -mmcu= to the right multilib variant
+# MULTILIB_OPTIONS
+# MULTILIB_DIRNAMES
+# MULTILIB_EXCEPTIONS
+# MULTILIB_MATCHES
+
+s-mlib: $(srcdir)/config/vn8/t-multilib
+
+$(srcdir)/config/vn8/t-multilib: $(srcdir)/config/vn8/genmultilib.awk \
+				 $(VN8_MCUS)
+	$(AWK) -f $< -v FORMAT=Makefile   $< $(VN8_MCUS) > $@

@@ -1,0 +1,324 @@
+/* VN8 MCUs.
+   Copyright (C) 2009-2014 Free Software Foundation, Inc.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3, or (at your option)
+   any later version.
+
+   GCC is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with GCC; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.  */
+
+/* List of all known VN8 MCU types.  If updated, cd to $(builddir)/gcc and run
+
+   $ make vn8-mcus
+
+   This will regenerate / update the following source files:
+
+   -  $(srcdir)/config/vn8/t-multilib
+   -  $(srcdir)/config/vn8/vn8-tables.opt
+   -  $(srcdir)/doc/vn8-mmcu.texi
+
+   After that, rebuild everything and check-in the new sources to the repo.
+   The device list below has to be kept in sync with VN8-LibC.
+
+
+   Before including this file, define a macro:
+
+   VN8_MCU (NAME, ARCH, DEV_ATTRIBUTE, MACRO, DATA_SEC, N_FLASH, LIBRARY_NAME)
+
+   where the arguments are the fields of vn8_mcu_t:
+
+       NAME          Accept -mmcu=<NAME>
+
+       ARCH          Specifies the multilib variant together with SHORT_SP
+
+       DEV_ATTRIBUTE Specifies the device specific features
+                     - additional ISA, short SP, errata skip etc.,
+
+       MACRO         If NULL, this is a core and not a device.  If non-NULL,
+                     supply respective built-in macro.
+
+       DATA_SEC      First address of SRAM, used in  -Tdata=  by the driver.
+
+       N_FLASH       Number of 64 KiB flash segments, rounded up.
+
+       LIBRARY_NAME  Used by the driver to linke startup code from vn8-libc
+                     as of  crt<LIBRARY_NAME>.o
+
+   "vn82" must be first for the "0" default to work as intended.  */
+
+/* Classic, <= 8K.  */
+VN8_MCU ("vn82",                 ARCH_VN82, VN8_ERRATA_SKIP, NULL,                     0x0060, 6, "s8515")
+VN8_MCU ("at90s2313",            ARCH_VN82, VN8_SHORT_SP, "__VN8_AT90S2313__",         0x0060, 1, "s2313")
+VN8_MCU ("at90s2323",            ARCH_VN82, VN8_SHORT_SP, "__VN8_AT90S2323__",         0x0060, 1, "s2323")
+VN8_MCU ("at90s2333",            ARCH_VN82, VN8_SHORT_SP, "__VN8_AT90S2333__",         0x0060, 1, "s2333")
+VN8_MCU ("at90s2343",            ARCH_VN82, VN8_SHORT_SP, "__VN8_AT90S2343__",         0x0060, 1, "s2343")
+VN8_MCU ("attiny22",             ARCH_VN82, VN8_SHORT_SP, "__VN8_ATtiny22__",          0x0060, 1, "tn22")
+VN8_MCU ("attiny26",             ARCH_VN82, VN8_SHORT_SP, "__VN8_ATtiny26__",          0x0060, 1, "tn26")
+VN8_MCU ("at90s4414",            ARCH_VN82, VN8_ISA_NONE, "__VN8_AT90S4414__",         0x0060, 1, "s4414")
+VN8_MCU ("at90s4433",            ARCH_VN82, VN8_SHORT_SP, "__VN8_AT90S4433__",         0x0060, 1, "s4433")
+VN8_MCU ("at90s4434",            ARCH_VN82, VN8_ISA_NONE, "__VN8_AT90S4434__",         0x0060, 1, "s4434")
+VN8_MCU ("at90s8515",            ARCH_VN82, VN8_ERRATA_SKIP, "__VN8_AT90S8515__",      0x0060, 1, "s8515")
+VN8_MCU ("at90c8534",            ARCH_VN82, VN8_ISA_NONE, "__VN8_AT90C8534__",         0x0060, 1, "c8534")
+VN8_MCU ("at90s8535",            ARCH_VN82, VN8_ISA_NONE, "__VN8_AT90S8535__",         0x0060, 1, "s8535")
+/* Classic + MOVW, <= 8K.  */
+VN8_MCU ("vn825",                ARCH_VN825, VN8_ISA_NONE, NULL,                       0x0060, 1, "tn85")
+VN8_MCU ("ata6289",              ARCH_VN825, VN8_ISA_NONE, "__VN8_ATA6289__",          0x0100, 1, "a6289")
+VN8_MCU ("ata5272",              ARCH_VN825, VN8_ISA_NONE, "__VN8_ATA5272__",          0x0100, 1, "a5272")
+VN8_MCU ("attiny13",             ARCH_VN825, VN8_SHORT_SP, "__VN8_ATtiny13__",         0x0060, 1, "tn13")
+VN8_MCU ("attiny13a",            ARCH_VN825, VN8_SHORT_SP, "__VN8_ATtiny13A__",        0x0060, 1, "tn13a")
+VN8_MCU ("attiny2313",           ARCH_VN825, VN8_SHORT_SP, "__VN8_ATtiny2313__",       0x0060, 1, "tn2313")
+VN8_MCU ("attiny2313a",          ARCH_VN825, VN8_SHORT_SP, "__VN8_ATtiny2313A__",      0x0060, 1, "tn2313a")
+VN8_MCU ("attiny24",             ARCH_VN825, VN8_SHORT_SP, "__VN8_ATtiny24__",         0x0060, 1, "tn24")
+VN8_MCU ("attiny24a",            ARCH_VN825, VN8_SHORT_SP, "__VN8_ATtiny24A__",        0x0060, 1, "tn24a")
+VN8_MCU ("attiny4313",           ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny4313__",       0x0060, 1, "tn4313")
+VN8_MCU ("attiny44",             ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny44__",         0x0060, 1, "tn44")
+VN8_MCU ("attiny44a",            ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny44A__",        0x0060, 1, "tn44a")
+VN8_MCU ("attiny84",             ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny84__",         0x0060, 1, "tn84")
+VN8_MCU ("attiny84a",            ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny84A__",        0x0060, 1, "tn84")
+VN8_MCU ("attiny25",             ARCH_VN825, VN8_SHORT_SP, "__VN8_ATtiny25__",         0x0060, 1, "tn25")
+VN8_MCU ("attiny45",             ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny45__",         0x0060, 1, "tn45")
+VN8_MCU ("attiny85",             ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny85__",         0x0060, 1, "tn85")
+VN8_MCU ("attiny261",            ARCH_VN825, VN8_SHORT_SP, "__VN8_ATtiny261__",        0x0060, 1, "tn261")
+VN8_MCU ("attiny261a",           ARCH_VN825, VN8_SHORT_SP, "__VN8_ATtiny261A__",       0x0060, 1, "tn261a")
+VN8_MCU ("attiny461",            ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny461__",        0x0060, 1, "tn461")
+VN8_MCU ("attiny461a",           ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny461A__",       0x0060, 1, "tn461a")
+VN8_MCU ("attiny861",            ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny861__",        0x0060, 1, "tn861")
+VN8_MCU ("attiny861a",           ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny861A__",       0x0060, 1, "tn861a")
+VN8_MCU ("attiny43u",            ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny43U__",        0x0060, 1, "tn43u")
+VN8_MCU ("attiny87",             ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny87__",         0x0100, 1, "tn87")
+VN8_MCU ("attiny48",             ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny48__",         0x0100, 1, "tn48")
+VN8_MCU ("attiny88",             ARCH_VN825, VN8_ISA_NONE, "__VN8_ATtiny88__",         0x0100, 1, "tn88")
+VN8_MCU ("at86rf401",            ARCH_VN825, VN8_ISA_NONE, "__VN8_AT86RF401__",        0x0060, 1, "86401")
+/* Classic, > 8K, <= 64K.  */
+VN8_MCU ("vn83",                 ARCH_VN83, VN8_ISA_NONE, NULL,                        0x0060, 1, "43355")
+VN8_MCU ("at43usb355",           ARCH_VN83, VN8_ISA_NONE, "__VN8_AT43USB355__",        0x0060, 1, "43355")
+VN8_MCU ("at76c711",             ARCH_VN83, VN8_ISA_NONE, "__VN8_AT76C711__",          0x0060, 1, "76711")
+/* Classic, == 128K.  */
+VN8_MCU ("vn831",                ARCH_VN831, VN8_ERRATA_SKIP, NULL,                    0x0060, 2, "m103")
+VN8_MCU ("atmega103",            ARCH_VN831, VN8_ERRATA_SKIP, "__VN8_ATmega103__",     0x0060, 2, "m103")
+VN8_MCU ("at43usb320",           ARCH_VN831, VN8_ISA_NONE, "__VN8_AT43USB320__",       0x0060, 2, "43320")
+/* Classic + MOVW + JMP/CALL.  */
+VN8_MCU ("vn835",                ARCH_VN835, VN8_ISA_NONE, NULL,                       0x0100, 1, "usb162")
+VN8_MCU ("ata5505",              ARCH_VN835, VN8_ISA_NONE, "__VN8_ATA5505__",          0x0100, 1, "a5505")
+VN8_MCU ("at90usb82",            ARCH_VN835, VN8_ISA_NONE, "__VN8_AT90USB82__",        0x0100, 1, "usb82")
+VN8_MCU ("at90usb162",           ARCH_VN835, VN8_ISA_NONE, "__VN8_AT90USB162__",       0x0100, 1, "usb162")
+VN8_MCU ("atmega8u2",            ARCH_VN835, VN8_ISA_NONE, "__VN8_ATmega8U2__",        0x0100, 1, "m8u2")
+VN8_MCU ("atmega16u2",           ARCH_VN835, VN8_ISA_NONE, "__VN8_ATmega16U2__",       0x0100, 1, "m16u2")
+VN8_MCU ("atmega32u2",           ARCH_VN835, VN8_ISA_NONE, "__VN8_ATmega32U2__",       0x0100, 1, "m32u2")
+VN8_MCU ("attiny167",            ARCH_VN835, VN8_ISA_NONE, "__VN8_ATtiny167__",        0x0100, 1, "tn167")
+VN8_MCU ("attiny1634",           ARCH_VN835, VN8_ISA_NONE, "__VN8_ATtiny1634__",       0x0100, 1, "tn1634")
+/* Enhanced, <= 8K.  */
+VN8_MCU ("vn84",                 ARCH_VN84, VN8_ISA_NONE,  NULL,                       0x0060, 1, "m8")
+VN8_MCU ("ata6285",              ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATA6285__",          0x0100, 1, "a6285")
+VN8_MCU ("ata6286",              ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATA6286__",          0x0100, 1, "a6286")
+VN8_MCU ("atmega8",              ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATmega8__",          0x0060, 1, "m8")
+VN8_MCU ("atmega8a",             ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATmega8A__",         0x0060, 1, "m8a")
+VN8_MCU ("atmega48",             ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATmega48__",         0x0100, 1, "m48")
+VN8_MCU ("atmega48a",            ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATmega48A__",        0x0100, 1, "m48a")
+VN8_MCU ("atmega48p",            ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATmega48P__",        0x0100, 1, "m48p")
+VN8_MCU ("atmega48pa",           ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATmega48PA__",       0x0100, 1, "m48pa")
+VN8_MCU ("atmega88",             ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATmega88__",         0x0100, 1, "m88")
+VN8_MCU ("atmega88a",            ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATmega88A__",        0x0100, 1, "m88a")
+VN8_MCU ("atmega88p",            ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATmega88P__",        0x0100, 1, "m88p")
+VN8_MCU ("atmega88pa",           ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATmega88PA__",       0x0100, 1, "m88pa")
+VN8_MCU ("atmega8515",           ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATmega8515__",       0x0060, 1, "m8515")
+VN8_MCU ("atmega8535",           ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATmega8535__",       0x0060, 1, "m8535")
+VN8_MCU ("atmega8hva",           ARCH_VN84, VN8_ISA_NONE,  "__VN8_ATmega8HVA__",       0x0100, 1, "m8hva")
+VN8_MCU ("at90pwm1",             ARCH_VN84, VN8_ISA_NONE,  "__VN8_AT90PWM1__",         0x0100, 1, "90pwm1")
+VN8_MCU ("at90pwm2",             ARCH_VN84, VN8_ISA_NONE,  "__VN8_AT90PWM2__",         0x0100, 1, "90pwm2")
+VN8_MCU ("at90pwm2b",            ARCH_VN84, VN8_ISA_NONE,  "__VN8_AT90PWM2B__",        0x0100, 1, "90pwm2b")
+VN8_MCU ("at90pwm3",             ARCH_VN84, VN8_ISA_NONE,  "__VN8_AT90PWM3__",         0x0100, 1, "90pwm3")
+VN8_MCU ("at90pwm3b",            ARCH_VN84, VN8_ISA_NONE,  "__VN8_AT90PWM3B__",        0x0100, 1, "90pwm3b")
+VN8_MCU ("at90pwm81",            ARCH_VN84, VN8_ISA_NONE,  "__VN8_AT90PWM81__",        0x0100, 1, "90pwm81")
+/* Enhanced, > 8K, <= 64K.  */
+VN8_MCU ("vn85",                 ARCH_VN85, VN8_ISA_NONE, NULL,                        0x0060, 1, "m16")
+VN8_MCU ("ata5790",              ARCH_VN85, VN8_ISA_NONE, "__VN8_ATA5790__",           0x0100, 1, "a5790")
+VN8_MCU ("ata5790n",             ARCH_VN85, VN8_ISA_NONE, "__VN8_ATA5790N__",          0x0100, 1, "a5790n")
+VN8_MCU ("ata5795",              ARCH_VN85, VN8_ISA_NONE, "__VN8_ATA5795__",           0x0100, 1, "a5795")
+VN8_MCU ("atmega16",             ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega16__",          0x0060, 1, "m16")
+VN8_MCU ("atmega16a",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega16A__",         0x0060, 1, "m16a")
+VN8_MCU ("atmega161",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega161__",         0x0060, 1, "m161")
+VN8_MCU ("atmega162",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega162__",         0x0100, 1, "m162")
+VN8_MCU ("atmega163",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega163__",         0x0060, 1, "m163")
+VN8_MCU ("atmega164a",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega164A__",        0x0100, 1, "m164a")
+VN8_MCU ("atmega164p",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega164P__",        0x0100, 1, "m164p")
+VN8_MCU ("atmega164pa",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega164PA__",       0x0100, 1, "m164pa")
+VN8_MCU ("atmega165",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega165__",         0x0100, 1, "m165")
+VN8_MCU ("atmega165a",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega165A__",        0x0100, 1, "m165a")
+VN8_MCU ("atmega165p",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega165P__",        0x0100, 1, "m165p")
+VN8_MCU ("atmega165pa",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega165PA__",       0x0100, 1, "m165pa")
+VN8_MCU ("atmega168",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega168__",         0x0100, 1, "m168")
+VN8_MCU ("atmega168a",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega168A__",        0x0100, 1, "m168a")
+VN8_MCU ("atmega168p",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega168P__",        0x0100, 1, "m168p")
+VN8_MCU ("atmega168pa",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega168PA__",       0x0100, 1, "m168pa")
+VN8_MCU ("atmega169",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega169__",         0x0100, 1, "m169")
+VN8_MCU ("atmega169a",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega169A__",        0x0100, 1, "m169a")
+VN8_MCU ("atmega169p",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega169P__",        0x0100, 1, "m169p")
+VN8_MCU ("atmega169pa",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega169PA__",       0x0100, 1, "m169pa")
+VN8_MCU ("atmega16hvb",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega16HVB__",       0x0100, 1, "m16hvb")
+VN8_MCU ("atmega16hvbrevb",      ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega16HVBREVB__",   0x0100, 1, "m16hvbrevb")
+VN8_MCU ("atmega16m1",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega16M1__",        0x0100, 1, "m16m1")
+VN8_MCU ("atmega16u4",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega16U4__",        0x0100, 1, "m16u4")
+VN8_MCU ("atmega26hvg",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega26HVG__",       0x0100, 1, "m26hvg")
+VN8_MCU ("atmega32a",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega32A__",         0x0060, 1, "m32a")
+VN8_MCU ("atmega32",             ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega32__",          0x0060, 1, "m32")
+VN8_MCU ("atmega323",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega323__",         0x0060, 1, "m323")
+VN8_MCU ("atmega324a",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega324A__",        0x0100, 1, "m324a")
+VN8_MCU ("atmega324p",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega324P__",        0x0100, 1, "m324p")
+VN8_MCU ("atmega324pa",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega324PA__",       0x0100, 1, "m324pa")
+VN8_MCU ("atmega325",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega325__",         0x0100, 1, "m325")
+VN8_MCU ("atmega325a",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega325A__",        0x0100, 1, "m325a")
+VN8_MCU ("atmega325p",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega325P__",        0x0100, 1, "m325p")
+VN8_MCU ("atmega3250",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega3250__",        0x0100, 1, "m3250")
+VN8_MCU ("atmega3250a",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega3250A__",       0x0100, 1, "m3250a")
+VN8_MCU ("atmega3250p",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega3250P__",       0x0100, 1, "m3250p")
+VN8_MCU ("atmega3250pa",         ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega3250PA__",      0x0100, 1, "m3250pa")
+VN8_MCU ("atmega328",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega328__",         0x0100, 1, "m328")
+VN8_MCU ("atmega328p",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega328P__",        0x0100, 1, "m328p")
+VN8_MCU ("atmega329",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega329__",         0x0100, 1, "m329")
+VN8_MCU ("atmega329a",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega329A__",        0x0100, 1, "m329a")
+VN8_MCU ("atmega329p",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega329P__",        0x0100, 1, "m329p")
+VN8_MCU ("atmega329pa",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega329PA__",       0x0100, 1, "m329pa")
+VN8_MCU ("atmega3290",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega3290__",        0x0100, 1, "m3290")
+VN8_MCU ("atmega3290a",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega3290A__",       0x0100, 1, "m3290a")
+VN8_MCU ("atmega3290p",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega3290P__",       0x0100, 1, "m3290p")
+VN8_MCU ("atmega3290pa",         ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega3290PA__",      0x0100, 1, "m3290pa")
+VN8_MCU ("atmega32c1",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega32C1__",        0x0100, 1, "m32c1")
+VN8_MCU ("atmega32m1",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega32M1__",        0x0100, 1, "m32m1")
+VN8_MCU ("atmega32u4",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega32U4__",        0x0100, 1, "m32u4")
+VN8_MCU ("atmega32u6",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega32U6__",        0x0100, 1, "m32u6")
+VN8_MCU ("atmega406",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega406__",         0x0100, 1, "m406")
+VN8_MCU ("atmega64",             ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega64__",          0x0100, 1, "m64")
+VN8_MCU ("atmega64a",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega64A__",         0x0100, 1, "m64a")
+VN8_MCU ("atmega640",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega640__",         0x0200, 1, "m640")
+VN8_MCU ("atmega644",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega644__",         0x0100, 1, "m644")
+VN8_MCU ("atmega644a",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega644A__",        0x0100, 1, "m644a")
+VN8_MCU ("atmega644p",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega644P__",        0x0100, 1, "m644p")
+VN8_MCU ("atmega644pa",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega644PA__",       0x0100, 1, "m644pa")
+VN8_MCU ("atmega645",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega645__",         0x0100, 1, "m645")
+VN8_MCU ("atmega645a",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega645A__",        0x0100, 1, "m645a")
+VN8_MCU ("atmega645p",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega645P__",        0x0100, 1, "m645p")
+VN8_MCU ("atmega6450",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega6450__",        0x0100, 1, "m6450")
+VN8_MCU ("atmega6450a",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega6450A__",       0x0100, 1, "m6450a")
+VN8_MCU ("atmega6450p",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega6450P__",       0x0100, 1, "m6450p")
+VN8_MCU ("atmega649",            ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega649__",         0x0100, 1, "m649")
+VN8_MCU ("atmega649a",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega649A__",        0x0100, 1, "m649a")
+VN8_MCU ("atmega649p",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega649P__",        0x0100, 1, "m649p")
+VN8_MCU ("atmega6490",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega6490__",        0x0100, 1, "m6490")
+VN8_MCU ("atmega16hva",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega16HVA__",       0x0100, 1, "m16hva")
+VN8_MCU ("atmega16hva2",         ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega16HVA2__",      0x0100, 1, "m16hva2")
+VN8_MCU ("atmega32hvb",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega32HVB__",       0x0100, 1, "m32hvb")
+VN8_MCU ("atmega6490a",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega6490A__",       0x0100, 1, "m6490a")
+VN8_MCU ("atmega6490p",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega6490P__",       0x0100, 1, "m6490p")
+VN8_MCU ("atmega64c1",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega64C1__",        0x0100, 1, "m64c1")
+VN8_MCU ("atmega64m1",           ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega64M1__",        0x0100, 1, "m64m1")
+VN8_MCU ("atmega64hve",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega64HVE__",       0x0100, 1, "m64hve")
+VN8_MCU ("atmega64rfa2",         ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega64RFA2__",      0x0200, 1, "m64rfa2")
+VN8_MCU ("atmega64rfr2",         ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega64RFR2__",      0x0200, 1, "m64rfr2")
+VN8_MCU ("atmega32hvbrevb",      ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega32HVBREVB__",   0x0100, 1, "m32hvbrevb")
+VN8_MCU ("atmega48hvf",          ARCH_VN85, VN8_ISA_NONE, "__VN8_ATmega48HVF__",       0x0100, 1, "m48hvf")
+VN8_MCU ("at90can32",            ARCH_VN85, VN8_ISA_NONE, "__VN8_AT90CAN32__",         0x0100, 1, "can32")
+VN8_MCU ("at90can64",            ARCH_VN85, VN8_ISA_NONE, "__VN8_AT90CAN64__",         0x0100, 1, "can64")
+VN8_MCU ("at90pwm161",           ARCH_VN85, VN8_ISA_NONE, "__VN8_AT90PWM161__",        0x0100, 1, "90pwm161")
+VN8_MCU ("at90pwm216",           ARCH_VN85, VN8_ISA_NONE, "__VN8_AT90PWM216__",        0x0100, 1, "90pwm216")
+VN8_MCU ("at90pwm316",           ARCH_VN85, VN8_ISA_NONE, "__VN8_AT90PWM316__",        0x0100, 1, "90pwm316")
+VN8_MCU ("at90scr100",           ARCH_VN85, VN8_ISA_NONE, "__VN8_AT90SCR100__",        0x0100, 1, "90scr100")
+VN8_MCU ("at90usb646",           ARCH_VN85, VN8_ISA_NONE, "__VN8_AT90USB646__",        0x0100, 1, "usb646")
+VN8_MCU ("at90usb647",           ARCH_VN85, VN8_ISA_NONE, "__VN8_AT90USB647__",        0x0100, 1, "usb647")
+VN8_MCU ("at94k",                ARCH_VN85, VN8_ISA_NONE, "__VN8_AT94K__",             0x0060, 1, "at94k")
+VN8_MCU ("m3000",                ARCH_VN85, VN8_ISA_NONE, "__VN8_M3000__",             0x1000, 1, "m3000")
+/* Enhanced, == 128K.  */
+VN8_MCU ("vn851",                ARCH_VN851, VN8_ISA_NONE, NULL,                       0x0100, 2, "m128")
+VN8_MCU ("atmega128",            ARCH_VN851, VN8_ISA_NONE, "__VN8_ATmega128__",        0x0100, 2, "m128")
+VN8_MCU ("atmega128a",           ARCH_VN851, VN8_ISA_NONE, "__VN8_ATmega128A__",       0x0100, 2, "m128a")
+VN8_MCU ("atmega1280",           ARCH_VN851, VN8_ISA_NONE, "__VN8_ATmega1280__",       0x0200, 2, "m1280")
+VN8_MCU ("atmega1281",           ARCH_VN851, VN8_ISA_NONE, "__VN8_ATmega1281__",       0x0200, 2, "m1281")
+VN8_MCU ("atmega1284",           ARCH_VN851, VN8_ISA_NONE, "__VN8_ATmega1284__",       0x0100, 2, "m1284")
+VN8_MCU ("atmega1284p",          ARCH_VN851, VN8_ISA_NONE, "__VN8_ATmega1284P__",      0x0100, 2, "m1284p")
+VN8_MCU ("atmega128rfa1",        ARCH_VN851, VN8_ISA_NONE, "__VN8_ATmega128RFA1__",    0x0200, 2, "m128rfa1")
+VN8_MCU ("at90can128",           ARCH_VN851, VN8_ISA_NONE, "__VN8_AT90CAN128__",       0x0100, 2, "can128")
+VN8_MCU ("at90usb1286",          ARCH_VN851, VN8_ISA_NONE, "__VN8_AT90USB1286__",      0x0100, 2, "usb1286")
+VN8_MCU ("at90usb1287",          ARCH_VN851, VN8_ISA_NONE, "__VN8_AT90USB1287__",      0x0100, 2, "usb1287")
+/* 3-Byte PC.  */
+VN8_MCU ("vn86",                 ARCH_VN86, VN8_ISA_NONE, NULL,                        0x0200, 4, "m2561")
+VN8_MCU ("atmega2560",           ARCH_VN86, VN8_ISA_NONE, "__VN8_ATmega2560__",        0x0200, 4, "m2560")
+VN8_MCU ("atmega2561",           ARCH_VN86, VN8_ISA_NONE, "__VN8_ATmega2561__",        0x0200, 4, "m2561")
+/* Xmega, 16K <= Flash < 64K, RAM <= 64K */
+VN8_MCU ("vn8xmega2",        ARCH_VN8XMEGA2, VN8_ISA_NONE, NULL,                       0x2000, 1, "x32a4")
+VN8_MCU ("atxmega16a4",      ARCH_VN8XMEGA2, VN8_ISA_NONE, "__VN8_ATxmega16A4__",      0x2000, 1, "x16a4")
+VN8_MCU ("atxmega16d4",      ARCH_VN8XMEGA2, VN8_ISA_NONE, "__VN8_ATxmega16D4__",      0x2000, 1, "x16d4")
+VN8_MCU ("atxmega32a4",      ARCH_VN8XMEGA2, VN8_ISA_NONE, "__VN8_ATxmega32A4__",      0x2000, 1, "x32a4")
+VN8_MCU ("atxmega32d4",      ARCH_VN8XMEGA2, VN8_ISA_NONE, "__VN8_ATxmega32D4__",      0x2000, 1, "x32d4")
+VN8_MCU ("atxmega32x1",      ARCH_VN8XMEGA2, VN8_ISA_NONE, "__VN8_ATxmega32X1__",      0x2000, 1, "x32x1")
+VN8_MCU ("atmxt112sl",       ARCH_VN8XMEGA2, VN8_ISA_NONE, "__VN8_ATMXT112SL__",       0x2000, 1, "mxt112sl")
+VN8_MCU ("atmxt224",         ARCH_VN8XMEGA2, VN8_ISA_NONE, "__VN8_ATMXT224__",         0x2000, 1, "mxt224")
+VN8_MCU ("atmxt224e",        ARCH_VN8XMEGA2, VN8_ISA_NONE, "__VN8_ATMXT224E__",        0x2000, 1, "mxt224e")
+VN8_MCU ("atmxt336s",        ARCH_VN8XMEGA2, VN8_ISA_NONE, "__VN8_ATMXT336S__",        0x2000, 1, "mxt336s")
+VN8_MCU ("atxmega16a4u",     ARCH_VN8XMEGA2, VN8_ISA_RMW,  "__VN8_ATxmega16A4U__",     0x2000, 1, "x16a4u")
+VN8_MCU ("atxmega16c4",      ARCH_VN8XMEGA2, VN8_ISA_RMW,  "__VN8_ATxmega16C4__",      0x2000, 1, "x16c4")
+VN8_MCU ("atxmega32a4u",     ARCH_VN8XMEGA2, VN8_ISA_RMW,  "__VN8_ATxmega32A4U__",     0x2000, 1, "x32a4u")
+VN8_MCU ("atxmega32c4",      ARCH_VN8XMEGA2, VN8_ISA_RMW,  "__VN8_ATxmega32C4__",      0x2000, 1, "x32c4")
+VN8_MCU ("atxmega32e5",      ARCH_VN8XMEGA2, VN8_ISA_NONE, "__VN8_ATxmega32E5__",      0x2000, 1, "x32e5")
+/* Xmega, 64K < Flash <= 128K, RAM <= 64K */
+VN8_MCU ("vn8xmega4",        ARCH_VN8XMEGA4, VN8_ISA_NONE, NULL,                       0x2000, 2, "x64a4")
+VN8_MCU ("atxmega64a3",      ARCH_VN8XMEGA4, VN8_ISA_NONE, "__VN8_ATxmega64A3__",      0x2000, 2, "x64a3")
+VN8_MCU ("atxmega64d3",      ARCH_VN8XMEGA4, VN8_ISA_NONE, "__VN8_ATxmega64D3__",      0x2000, 2, "x64d3")
+VN8_MCU ("atxmega64a3u",     ARCH_VN8XMEGA4, VN8_ISA_RMW,  "__VN8_ATxmega64A3U__",     0x2000, 2, "x64a3u")
+VN8_MCU ("atxmega64a4u",     ARCH_VN8XMEGA4, VN8_ISA_RMW,  "__VN8_ATxmega64A4U__",     0x2000, 2, "x64a4u")
+VN8_MCU ("atxmega64b1",      ARCH_VN8XMEGA4, VN8_ISA_RMW,  "__VN8_ATxmega64B1__",      0x2000, 2, "x64b1")
+VN8_MCU ("atxmega64b3",      ARCH_VN8XMEGA4, VN8_ISA_RMW,  "__VN8_ATxmega64B3__",      0x2000, 2, "x64b3")
+VN8_MCU ("atxmega64c3",      ARCH_VN8XMEGA4, VN8_ISA_RMW,  "__VN8_ATxmega64C3__",      0x2000, 2, "x64c3")
+VN8_MCU ("atxmega64d4",      ARCH_VN8XMEGA4, VN8_ISA_NONE, "__VN8_ATxmega64D4__",      0x2000, 2, "x64d4")
+/* Xmega, 64K < Flash <= 128K, RAM > 64K */
+VN8_MCU ("vn8xmega5",        ARCH_VN8XMEGA5, VN8_ISA_NONE, NULL,                       0x2000, 2, "x64a1")
+VN8_MCU ("atxmega64a1",      ARCH_VN8XMEGA5, VN8_ISA_NONE, "__VN8_ATxmega64A1__",      0x2000, 2, "x64a1")
+VN8_MCU ("atxmega64a1u",     ARCH_VN8XMEGA5, VN8_ISA_RMW,  "__VN8_ATxmega64A1U__",     0x2000, 2, "x64a1u")
+/* Xmega, 128K < Flash, RAM <= 64K */
+VN8_MCU ("vn8xmega6",        ARCH_VN8XMEGA6, VN8_ISA_NONE, NULL,                       0x2000, 6, "x128a3")
+VN8_MCU ("atxmega128a3",     ARCH_VN8XMEGA6, VN8_ISA_NONE, "__VN8_ATxmega128A3__",     0x2000, 3, "x128a3")
+VN8_MCU ("atxmega128d3",     ARCH_VN8XMEGA6, VN8_ISA_NONE, "__VN8_ATxmega128D3__",     0x2000, 3, "x128d3")
+VN8_MCU ("atxmega192a3",     ARCH_VN8XMEGA6, VN8_ISA_NONE, "__VN8_ATxmega192A3__",     0x2000, 4, "x192a3")
+VN8_MCU ("atxmega192d3",     ARCH_VN8XMEGA6, VN8_ISA_NONE, "__VN8_ATxmega192D3__",     0x2000, 4, "x192d3")
+VN8_MCU ("atxmega256a3",     ARCH_VN8XMEGA6, VN8_ISA_NONE, "__VN8_ATxmega256A3__",     0x2000, 5, "x256a3")
+VN8_MCU ("atxmega256a3b",    ARCH_VN8XMEGA6, VN8_ISA_NONE, "__VN8_ATxmega256A3B__",    0x2000, 5, "x256a3b")
+VN8_MCU ("atxmega256a3bu",   ARCH_VN8XMEGA6, VN8_ISA_NONE, "__VN8_ATxmega258A3BU__",   0x2000, 5, "x256a3bu")
+VN8_MCU ("atxmega256d3",     ARCH_VN8XMEGA6, VN8_ISA_NONE, "__VN8_ATxmega256D3__",     0x2000, 5, "x256d3")
+VN8_MCU ("atxmega128a3u",    ARCH_VN8XMEGA6, VN8_ISA_RMW, "__VN8_ATxmega128A3U__",    0x2000, 3, "x128a3u")
+VN8_MCU ("atxmega128b1",     ARCH_VN8XMEGA6, VN8_ISA_RMW,  "__VN8_ATxmega128B1__",     0x2000, 3, "x128b1")
+VN8_MCU ("atxmega128b3",     ARCH_VN8XMEGA6, VN8_ISA_RMW,  "__VN8_ATxmega128B3__",     0x2000, 3, "x128b3")
+VN8_MCU ("atxmega128c3",     ARCH_VN8XMEGA6, VN8_ISA_RMW,  "__VN8_ATxmega128C3__",     0x2000, 3, "x128c3")
+VN8_MCU ("atxmega128d4",     ARCH_VN8XMEGA6, VN8_ISA_NONE, "__VN8_ATxmega128D4__",     0x2000, 3, "x128d4")
+VN8_MCU ("atmxt540s",        ARCH_VN8XMEGA6, VN8_ISA_NONE, "__VN8_ATMXT540S__",        0x2000, 2, "mxt540s")
+VN8_MCU ("atmxt540sreva",    ARCH_VN8XMEGA6, VN8_ISA_NONE, "__VN8_ATMXT540SREVA__",    0x2000, 2, "mxt540sreva")
+VN8_MCU ("atxmega192a3u",    ARCH_VN8XMEGA6, VN8_ISA_RMW,  "__VN8_ATxmega192A3U__",    0x2000, 4, "x192a3u")
+VN8_MCU ("atxmega192c3",     ARCH_VN8XMEGA6, VN8_ISA_RMW,  "__VN8_ATxmega192C3__",     0x2000, 4, "x192c3")
+VN8_MCU ("atxmega256a3u",    ARCH_VN8XMEGA6, VN8_ISA_RMW,  "__VN8_ATxmega256A3U__",    0x2000, 5, "x256a3u")
+VN8_MCU ("atxmega256c3",     ARCH_VN8XMEGA6, VN8_ISA_RMW,  "__VN8_ATxmega256C3__",     0x2000, 5, "x256c3")
+VN8_MCU ("atxmega384c3",     ARCH_VN8XMEGA6, VN8_ISA_RMW,  "__VN8_ATxmega384C3__",     0x2000, 6, "x384c3")
+VN8_MCU ("atxmega384d3",     ARCH_VN8XMEGA6, VN8_ISA_NONE, "__VN8_ATxmega384D3__",     0x2000, 6, "x384d3")
+/* Xmega, 128K < Flash, RAM > 64K RAM.  */
+VN8_MCU ("vn8xmega7",        ARCH_VN8XMEGA7, VN8_ISA_NONE, NULL,                       0x2000, 3, "x128a1")
+VN8_MCU ("atxmega128a1",     ARCH_VN8XMEGA7, VN8_ISA_NONE, "__VN8_ATxmega128A1__",     0x2000, 3, "x128a1")
+VN8_MCU ("atxmega128a1u",    ARCH_VN8XMEGA7, VN8_ISA_RMW,  "__VN8_ATxmega128A1U__",    0x2000, 3, "x128a1u")
+VN8_MCU ("atxmega128a4u",    ARCH_VN8XMEGA7, VN8_ISA_RMW,  "__VN8_ATxmega128A4U__",    0x2000, 3, "x128a4u")
+/* Assembler only.  */
+VN8_MCU ("vn81",                 ARCH_VN81, VN8_ISA_NONE, NULL,                        0x0060, 1, "s1200")
+VN8_MCU ("at90s1200",            ARCH_VN81, VN8_ISA_NONE, "__VN8_AT90S1200__",         0x0060, 1, "s1200")
+VN8_MCU ("attiny11",             ARCH_VN81, VN8_ISA_NONE, "__VN8_ATtiny11__",          0x0060, 1, "tn11")
+VN8_MCU ("attiny12",             ARCH_VN81, VN8_ISA_NONE, "__VN8_ATtiny12__",          0x0060, 1, "tn12")
+VN8_MCU ("attiny15",             ARCH_VN81, VN8_ISA_NONE, "__VN8_ATtiny15__",          0x0060, 1, "tn15")
+VN8_MCU ("attiny28",             ARCH_VN81, VN8_ISA_NONE, "__VN8_ATtiny28__",          0x0060, 1, "tn28")
+/*ICDREC VN8 - Chip 8bit Ram 8Kb, Flash 256Kb*/
+VN8_MCU ("vn8",                  ARCH_VN8, VN8_ISA_NONE, NULL,                         0x0060, 1, "m8")
+VN8_MCU ("vn8big",               ARCH_VN8, VN8_ISA_NONE,  "__VN_T__",                  0x0060, 1, "m8515")
+VN8_MCU ("vn8small",             ARCH_VN8, VN8_ISA_NONE,  "__VN_E__",                  0x0060, 1, "m8515")
